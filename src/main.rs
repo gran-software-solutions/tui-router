@@ -93,6 +93,14 @@ struct SettingsRenderer {
     app_name_input: String, // app.name
 }
 
+impl SettingsRenderer {
+    fn new(app_name_input: String) -> Self {
+        Self {
+            app_name_input
+        }
+    }
+}
+
 impl Renderer for SettingsRenderer {
     fn render(&self, route: &Route, app: &App) {
         println!("Settings {}", app.name);
@@ -104,12 +112,12 @@ fn main() {
         Route::new(
             "/hello".to_string(),
             Box::new(move || {}),
-            Box::new(HelloRenderer::new("Welcome to the Jungle".to_string()))
+            Box::new(HelloRenderer::new("Welcome to the Jungle".to_string())),
         ),
         Route::new(
             "/settings".to_string(),
             Box::new(move || {}),
-            Box::new(HelloRenderer::new("Welcome to the Jungle".to_string())))
+            Box::new(SettingsRenderer::new("Welcome to the Jungle".to_string()))),
     ];
     let router = Router::new(routes);
 
