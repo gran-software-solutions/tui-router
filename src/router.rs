@@ -1,8 +1,12 @@
+use std::sync::mpsc::Receiver;
+use crossterm::event::KeyCode;
 use crate::{App, Renderer};
+use crate::tui::TerminalEvent;
 
 pub struct Router {
     routes: Vec<Route>,
     current_route: String,
+    receiver: Receiver<TerminalEvent>,
 }
 
 pub struct Route {
@@ -12,17 +16,26 @@ pub struct Route {
 }
 
 impl Router {
-    pub fn new(routes: Vec<Route>) -> Self {
+    pub fn new(routes: Vec<Route>, receiver: Receiver<TerminalEvent>) -> Self {
         let route: &Route = &routes[0];
         let name = route.name.clone();
         Router {
             routes,
             current_route: name,
+            receiver,
         }
     }
 
     pub fn handle_input(&self, app: &mut App) {
-        app.is_running = false;
+        let event = self.receiver.recv().expect("could not read TerminalEvent");
+
+        match event {
+            TerminalEvent::Key(e) => {
+                if let KeyCode::Esc = e.code {
+                    app.is_running = false;
+                }
+            }
+        }
     }
 
     pub fn render(&self, app: &App) {
