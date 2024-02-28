@@ -380,7 +380,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "tui-example"
+name = "tui-router"
 version = "0.1.0"
 dependencies = [
  "crossterm",
